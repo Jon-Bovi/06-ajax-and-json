@@ -38,7 +38,6 @@ Article.loadAll = function(inputData) {
     Article.allArticles.push(new Article(ele));
   });
 };
-
 /* This function below will retrieve the data from either a local or remote
  source, process it, then hand off control to the View: */
 Article.fetchAll = function() {
@@ -52,6 +51,14 @@ Article.fetchAll = function() {
       1.a Load our json data
       1.b Store that data in localStorage so that we can skip the server call next time,
       1.c And then render the index page.*/
+    $.getJSON('../../data/blogArticles.json', function(data) {
+      console.log(data);
+      Article.loadAll(data);
+      localStorage.setItem('blogArticles', JSON.stringify(data));
+      articleView.renderIndexPage();
+    });
+
+
   }
 };
 
