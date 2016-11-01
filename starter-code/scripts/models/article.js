@@ -41,27 +41,37 @@ Article.loadAll = function(inputData) {
 /* This function below will retrieve the data from either a local or remote
  source, process it, then hand off control to the View: */
 Article.fetchAll = function() {
-  if (localStorage.blogArticles) {
-    /* When our data is already in localStorage:
-    1. We can process and load it,
-    2. Then we can render the index page.  */
-    var blogArticles = JSON.parse(localStorage.getItem('blogArticles'));
-    Article.loadAll(blogArticles);
-    articleView.renderIndexPage();
-    console.log('Loaded from Local');
-  } else {
-    /* Without our localStorage in memory, we need to:
-    1. Retrieve our JSON file with $.getJSON
-      1.a Load our json data
-      1.b Store that data in localStorage so that we can skip the server call next time,
-      1.c And then render the index page.*/
-    $.getJSON('../../data/blogArticles.json', function(data) {
-      Article.loadAll(data);
-      localStorage.setItem('blogArticles', JSON.stringify(data));
-      articleView.renderIndexPage();
-      console.log('Loaded from database');
-    });
-  }
+  $.ajax({
+    url: '../../data/blogArticles.json',
+    type: 'GET',
+    ifModified: true,
+    success: function (data, status) {
+      if (localStorage.blogArticles) {
+        /*
+        status === 'success'
+
+         When our data is already in localStorage:
+        1. We can process and load it,
+        2. Then we can render the index page.  */
+        var blogArticles = JSON.parse(localStorage.getItem('blogArticles'));
+        Article.loadAll(blogArticles);
+        articleView.renderIndexPage();
+        console.log('Loaded from Local');
+      } else {
+        /* Without our localStorage in memory, we need to:
+        1. Retrieve our JSON file with $.getJSON
+          1.a Load our json data
+          1.b Store that data in localStorage so that we can skip the server call next time,
+          1.c And then render the index page.*/
+        $.getJSON('../../data/blogArticles.json', function(data) {
+          Article.loadAll(data);
+          localStorage.setItem('blogArticles', JSON.stringify(data));
+          articleView.renderIndexPage();
+          console.log('Loaded from database');
+        });
+      }
+    }
+  });
 };
 
 
@@ -74,6 +84,8 @@ Article.fetchAll = function() {
        Let's make a request to get the eTag (hint: what method on which
         object could we use to find the eTag?
 
-    } else {}
+    } else {
+
+  }
   }
 */
