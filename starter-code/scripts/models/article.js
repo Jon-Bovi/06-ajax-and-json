@@ -40,11 +40,15 @@ Article.loadAll = function(inputData) {
 };
 /* This function below will retrieve the data from either a local or remote
  source, process it, then hand off control to the View: */
-Article.fetchAll = function() {
+Article.fetchAll = function() { $.getJSON()
   if (localStorage.blogArticles) {
     /* When our data is already in localStorage:
     1. We can process and load it,
     2. Then we can render the index page.  */
+    $.ajax({url: '../../data/blogArticles.json', type: 'GET', success: function(data,message,xhr){
+      console.log(xhr.getAllResponseHeaders());
+    }
+  });
     var blogArticles = JSON.parse(localStorage.getItem('blogArticles'));
     Article.loadAll(blogArticles);
     articleView.renderIndexPage();
@@ -65,15 +69,20 @@ Article.fetchAll = function() {
 };
 
 
-
-/* Great work so far! STRETCH GOAL TIME!? Our main goal in this part of the
-   lab will be saving the eTag located in Headers, to see if it's been updated:
-
-  Article.fetchAll = function() {
-    if (localStorage.hackerIpsum) {
-       Let's make a request to get the eTag (hint: what method on which
-        object could we use to find the eTag?
-
-    } else {}
-  }
-*/
+//
+// // great work so far! STRETCH GOAL TIME!? Our main goal in this part of the
+// //    lab will be saving the eTag located in Headers, to see if it's been updated:
+//
+// Article.fetchAll = function() {
+//   if (localStorage.blogArticles) {
+//     $.ajax({url: '../../data/blogArticles.json', type: 'GET', success: function(data,message,xhr){
+//       console.log(xhr.getAllResponseHeaders());
+//     }
+// });
+//   } else {
+//   }
+// // var eTag = xhr.getResponseHeader('eTag');
+// //       if (!localStorage.eTag || eTag !== localStorage.eTag) {
+// //           localStorage.eTag = eTag;
+// //          Article.getAll();
+// };
